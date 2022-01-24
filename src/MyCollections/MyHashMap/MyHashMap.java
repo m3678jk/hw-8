@@ -68,16 +68,34 @@ public class MyHashMap <K,V> {
     }
 
     public void put(K key, V value) {
-        MyHashMap.MyNode<K, V> l = last;
-        MyHashMap.MyNode<K, V> f = first;
-        final MyHashMap.MyNode<K, V> newNode = new MyHashMap.MyNode<K, V>(key, value, null, hashCode());
-        if (l == null)
-            first = newNode;
-        else
-            l.next = newNode;
-        last = newNode;
-        size++;
+         if (!isKeyInHashMap(key)) {
+            MyHashMap.MyNode<K, V> l = last;
+            MyHashMap.MyNode<K, V> f = first;
+            final MyHashMap.MyNode<K, V> newNode = new MyHashMap.MyNode<K, V>(key, value, null, hashCode());
+            if (l == null)
+                first = newNode;
+            else
+                l.next = newNode;
+            last = newNode;
+            size++;
+            System.out.println("Key - "+ key + " and value - " + value + " are added");
+
+        } else {
+
+             System.out.println("Key - " + key + " is alredy exsist.");
+         }
     }
+    public boolean isKeyInHashMap(K key){
+        int count = 0;
+        for (MyNode<K, V> y = first; y != null; y = y.next){
+            if (key.equals(y.key)){
+                count++;
+            }
+
+        }
+        return count==1;
+    }
+
 
     public void remove(K key) {
         size--;
@@ -136,6 +154,8 @@ class MyHashMapTest{
         testedHashMap.put("Key1", "value1");
         System.out.println(testedHashMap);
         System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
+        testedHashMap.put("Key2", "value2");
+        System.out.println(testedHashMap);
         testedHashMap.put("Key2", "value2");
         System.out.println(testedHashMap);
         System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
