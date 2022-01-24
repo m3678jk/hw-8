@@ -1,6 +1,8 @@
 package MyCollections.MyLinkedList;
 
-class MyLinkedList<E> {
+import MyCollections.MyHashMap.MyHashMap;
+
+public class MyLinkedList<E> {
     int size = 0;
     MyNode<E> first;
     MyNode<E> last;
@@ -52,37 +54,32 @@ class MyLinkedList<E> {
 
 
     public E remove(int index) {
-        // get element via index
         if (index >= 0 && index < size) {
-            MyLinkedList.MyNode<E> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
+            MyLinkedList.MyNode<E> nodeToRemove = (MyNode<E>) get(index);
+            System.out.println("node to remove" + nodeToRemove);
+            MyLinkedList.MyNode<E> nodeBefore = nodeToRemove.prev;
+            MyLinkedList.MyNode<E> nodeNext = nodeToRemove.next;
 
-            final E element = x.element;
-            final MyLinkedList.MyNode<E> next = x.next;
-            final MyLinkedList.MyNode<E> prev = x.prev;
-            if (prev == null) {
-                first = next;
+            MyLinkedList.MyNode<E> z = first;
+
+            if (index == 0) {
+                first = z.next;
             } else {
-                prev.next = next;
-                x.prev = null;
+                for (int i = 0; i < index - 1; i++) {
+                    z = z.next;
+                }
+                z.next = nodeNext;
+                z.prev = nodeBefore;
             }
 
-            if (next == null) {
-                last = prev;
-            } else {
-                next.prev = prev;
-                x.next = null;
-            }
-
-            size--;
-            return element;
+            return nodeToRemove.element;
         }
+
+
         return null;
     }
 
-    public void clean() {
+    public void clear() {
         for (MyLinkedList.MyNode<E> x = first; x != null; ) {
             MyLinkedList.MyNode<E> next = x.next;
             x.next = null;
@@ -127,12 +124,11 @@ class MyLinkedListTest {
 
         System.out.println("Element from specific index 1 - " + testedList.get(1));
 
-
-        System.out.println("Removed element from specific index - " + testedList.remove(3));
+        System.out.println("Removed element from 2 index - " + testedList.remove(2));
 
         System.out.println("TestedList after removed element - " + testedList);
 
-        testedList.clean();
+        testedList.clear();
         System.out.println("TestedList after cleaning - " + testedList);
         System.out.println("Size of testedList - " + testedList.size());
 

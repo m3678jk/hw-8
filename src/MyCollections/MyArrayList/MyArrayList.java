@@ -2,11 +2,10 @@ package MyCollections.MyArrayList;
 
 import java.util.Arrays;
 
-class MyArrayList <T> {
-    private T[] array;
-    public Object [] changedArray;
-    public T element;
+public class MyArrayList<T> {
+    private T[] array = (T[]) new Object[]{};
 
+    public Object[] changedArray;
 
     public void setArray(T[] array) {
         this.array = (T[]) array;
@@ -17,97 +16,89 @@ class MyArrayList <T> {
     }
 
 
-    public void add(T[] array, T element) {
+    public void add(T element) {
 
-        // create Object Array based on elements from income array
-        Object[] arrayToChange = Arrays.copyOf(array, array.length);
+        Object[] arrayWithElement = {element};
 
         // extend length of new Array
-        changedArray = new Object [array.length +1];
+        changedArray = new Object[array.length + 1];
 
         // Copy objects from base array to new one
-        System.arraycopy(arrayToChange, 0, changedArray, 0, arrayToChange.length);
+        System.arraycopy(getArray(), 0, changedArray, 0, getArray().length);
+        System.arraycopy(arrayWithElement, 0, changedArray, array.length, 1);
 
-        int size = changedArray.length;
-
-        // add new element in the end
-        changedArray [size-1]= element;
-
-        // return new array with added element
-        setArray((T[])changedArray);
+        // set new array with added element
+        setArray((T[]) changedArray);
 
     }
 
     public void remove(int index) {
-        if (index >= getArray().length){
+        if (index >= getArray().length) {
             System.out.println("Incorrect index");
         } else {
             // create Object Array based on elements from income array
             Object[] arrayToChange = Arrays.copyOf(getArray(), getArray().length);
 
             // reduce length of new Array
-            changedArray = new Object[arrayToChange.length -1];
+            changedArray = new Object[arrayToChange.length - 1];
 
             // Copy objects from base array to new one
-            System.arraycopy(arrayToChange,0,changedArray, 0,index);
-            System.arraycopy(arrayToChange,index+1 ,changedArray, index,arrayToChange.length-index-1);
+            System.arraycopy(arrayToChange, 0, changedArray, 0, index);
+            System.arraycopy(arrayToChange, index + 1, changedArray, index, arrayToChange.length - index - 1);
 
             // return new array without removed element
-            setArray((T[])changedArray);
+            setArray((T[]) changedArray);
         }
 
 
     }
 
     public void clear() {
-        // create Object Array based on elements from income array
-        Object[] arrayToChange = Arrays.copyOf(getArray(), getArray().length);
-        // reduce length of new Array
-
-        changedArray = new Object[arrayToChange.length];
-//        for (int i =0 ; i < arrayToChange.length; i++){
-//            changedArray[i]=null;
-//        }
-
-        setArray((T[])changedArray);
+        changedArray = new Object[0];
+        setArray((T[]) changedArray);
     }
 
     public int size() {
         return getArray().length;
     }
 
-    public T get(int index){
+    public T get(int index) {
 
         System.out.println();
         return getArray()[index];
     }
 
 
-
 }
 
-class MyArrayListTest{
+class MyArrayListTest {
     public static void main(String[] args) {
-        MyArrayList <String> testedArray = new MyArrayList<String>();
-        String [] arrayString = new String[]{"g", "r", "w"};
+        MyArrayList<String> testedArray = new MyArrayList<String>();
 
-        testedArray.setArray(arrayString);
-        System.out.println("Array before changes - " + Arrays.toString(testedArray.getArray()));
+        testedArray.add("A");
+        System.out.println("Array after adding one element - " + Arrays.toString(testedArray.getArray()));
 
-        testedArray.add(arrayString, "new one");
-        System.out.println("Array after adding one element - "+ Arrays.toString(testedArray.getArray()));
+        testedArray.add("B");
+        System.out.println("Array after adding one element - " + Arrays.toString(testedArray.getArray()));
+
+        testedArray.add("C");
+        System.out.println("Array after adding one element - " + Arrays.toString(testedArray.getArray()));
+
+        testedArray.add("D");
+        System.out.println("Array after adding one element - " + Arrays.toString(testedArray.getArray()));
 
         testedArray.remove(0);
-        System.out.println(("Array after removing element - "+ Arrays.toString(testedArray.getArray())));
-
-        testedArray.clear();
-        System.out.println(("Array after clearing - "+ Arrays.toString(testedArray.getArray())));
+        System.out.println(("Array after removing element - " + Arrays.toString(testedArray.getArray())));
 
         testedArray.size();
         System.out.println("Size of array - " + testedArray.size());
 
         testedArray.get(2);
         System.out.println("Element - " + testedArray.get(2));
+
+        testedArray.clear();
+        System.out.println(("Array after clearing - " + Arrays.toString(testedArray.getArray())));
+
 
     }
 }

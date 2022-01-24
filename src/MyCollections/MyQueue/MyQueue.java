@@ -2,7 +2,7 @@ package MyCollections.MyQueue;
 
 import java.util.Arrays;
 
-class MyQueue<E> {
+public class MyQueue<E> {
 
     private E[] queue = (E[]) new Object[]{};
     public Object [] changedQueue;

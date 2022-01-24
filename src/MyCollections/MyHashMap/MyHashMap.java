@@ -2,7 +2,7 @@ package MyCollections.MyHashMap;
 
 import java.util.*;
 
-class MyHashMap <K,V> {
+public class MyHashMap <K,V> {
     MyHashMap.MyNode<K, V> last;
     MyHashMap.MyNode<K, V> first;
 
@@ -27,10 +27,6 @@ class MyHashMap <K,V> {
 
         public V getValue() {
             return value;
-        }
-
-        public final int hashCode() {
-            return Objects.hashCode(key);
         }
 
         @Override

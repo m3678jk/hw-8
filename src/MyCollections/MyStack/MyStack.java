@@ -2,7 +2,7 @@ package MyCollections.MyStack;
 
 import java.util.Arrays;
 
-class MyStack<E> {
+public class MyStack<E> {
 
     private E[] stack = (E[]) new Object[]{};
     public Object[] changedStack;
