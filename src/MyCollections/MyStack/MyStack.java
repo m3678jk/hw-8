@@ -71,16 +71,21 @@ public class MyStack<E> {
     }
 
     public E pop() {
-        E element = getStack()[getStack().length - 1];
-        Object[] arrayToChange = Arrays.copyOf(getStack(), getStack().length);
+        if (size()==0){
+            System.out.println("Size = "+  size() +", Stack is empty");
+            return null;
+        } else {
+            E element = getStack()[getStack().length - 1];
+            Object[] arrayToChange = Arrays.copyOf(getStack(), getStack().length);
 
-        // reduce length of new Array
-        changedStack = new Object[arrayToChange.length - 1];
+            // reduce length of new Array
+            changedStack = new Object[arrayToChange.length - 1];
 
-        // Copy objects from base array to new one
-        System.arraycopy(arrayToChange, 0, changedStack, 0, arrayToChange.length - 1);
-        setStack((E[]) changedStack);
-        return element;
+            // Copy objects from base array to new one
+            System.arraycopy(arrayToChange, 0, changedStack, 0, arrayToChange.length - 1);
+            setStack((E[]) changedStack);
+            return element;
+        }
     }
 }
 
@@ -116,7 +121,7 @@ class MyStackTest {
         testedStack.clear();
         System.out.println("Stack after popping an element - " + Arrays.toString(testedStack.getStack()));
 
-        testedStack.peek();
+        testedStack.pop();
 
     }
 }

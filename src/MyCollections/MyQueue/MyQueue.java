@@ -5,8 +5,8 @@ import java.util.Arrays;
 public class MyQueue<E> {
 
     private E[] queue = (E[]) new Object[]{};
-    public Object [] changedQueue;
-    public E element;
+    private Object [] changedQueue;
+    private E element;
 
     public void setQueue(E[] array) {
         this.queue = array;
@@ -68,21 +68,31 @@ public void remove(int index) {
     }
 
     public E peek(){
+        if (size()==0){
+            System.out.println("Size = "+  size() +", Queue is empty");
+            return null;
+        }
+
         return getQueue()[0];
     }
 
     public E poll(){
-        E element = getQueue()[0];
-        Object[] arrayToChange = Arrays.copyOf(getQueue(), getQueue().length);
+        if (size()==0){
+            System.out.println("Size = "+  size() +", Queue is empty");
+            return null;
+        } else {
 
-        // reduce length of new Array
-        changedQueue = new Object[arrayToChange.length -1];
+            E element = getQueue()[0];
+            Object[] arrayToChange = Arrays.copyOf(getQueue(), getQueue().length);
 
-        // Copy objects from base array to new one
-        System.arraycopy(arrayToChange,1,changedQueue, 0,arrayToChange.length-1);
-        setQueue((E[]) changedQueue);
-        return element;
+            // reduce length of new Array
+            changedQueue = new Object[arrayToChange.length - 1];
 
+            // Copy objects from base array to new one
+            System.arraycopy(arrayToChange, 1, changedQueue, 0, arrayToChange.length - 1);
+            setQueue((E[]) changedQueue);
+            return element;
+        }
     }
 }
 class MyQueueTest{
@@ -110,5 +120,6 @@ class MyQueueTest{
         System.out.println("Queue after polled element - "+ Arrays.toString(testedQueue.getQueue()));
         testedQueue.clear();
         System.out.println("Queue after cleaning - "+ Arrays.toString(testedQueue.getQueue()));
+        testedQueue.peek();
     }
 }

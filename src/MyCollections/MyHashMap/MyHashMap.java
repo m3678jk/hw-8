@@ -1,6 +1,6 @@
 package MyCollections.MyHashMap;
 
-import java.util.*;
+import java.util.Objects;
 
 public class MyHashMap<K, V> {
     private final static int TABLE_CAPACITY = 16;
