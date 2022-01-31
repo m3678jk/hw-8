@@ -3,7 +3,7 @@ package MyCollections.MyLinkedList;
 import MyCollections.MyHashMap.MyHashMap;
 
 public class MyLinkedList<E> {
-    int size = 0;
+    private int size = 0;
     MyNode<E> first;
     MyNode<E> last;
 

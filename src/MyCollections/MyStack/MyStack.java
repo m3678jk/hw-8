@@ -63,6 +63,10 @@ public class MyStack<E> {
     }
 
     public E peek() {
+        if (size()==0){
+            System.out.println("Size = "+  size() +", Stack is empty");
+            return null;
+        }
         return getStack()[getStack().length - 1];
     }
 
@@ -112,6 +116,7 @@ class MyStackTest {
         testedStack.clear();
         System.out.println("Stack after popping an element - " + Arrays.toString(testedStack.getStack()));
 
+        testedStack.peek();
 
     }
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class MyArrayList<T> {
     private T[] array = (T[]) new Object[]{};
 
-    public Object[] changedArray;
+    private Object[] changedArray;
 
     public void setArray(T[] array) {
         this.array = (T[]) array;
@@ -33,7 +33,7 @@ public class MyArrayList<T> {
     }
 
     public void remove(int index) {
-        if (index >= getArray().length) {
+        if (index < 0 || index >= getArray().length ) {
             System.out.println("Incorrect index");
         } else {
             // create Object Array based on elements from income array
@@ -63,9 +63,13 @@ public class MyArrayList<T> {
     }
 
     public T get(int index) {
+        if (index > getArray().length) {
+            System.out.println("Size of arrayList is - "+ size() + " please enter index which less that size");
+            return null;
+        } else {
+            return getArray()[index];
 
-        System.out.println();
-        return getArray()[index];
+        }
     }
 
 
@@ -93,7 +97,6 @@ class MyArrayListTest {
         testedArray.size();
         System.out.println("Size of array - " + testedArray.size());
 
-        testedArray.get(2);
         System.out.println("Element - " + testedArray.get(2));
 
         testedArray.clear();

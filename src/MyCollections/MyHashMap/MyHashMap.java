@@ -2,23 +2,116 @@ package MyCollections.MyHashMap;
 
 import java.util.*;
 
-public class MyHashMap <K,V> {
-    MyHashMap.MyNode<K, V> last;
-    MyHashMap.MyNode<K, V> first;
+public class MyHashMap<K, V> {
+    private final static int TABLE_CAPACITY = 16;
+
+    private final MyHashMap.MyNode<K, V>[] table = new MyHashMap.MyNode[TABLE_CAPACITY];
 
     private int size = 0;
 
+    int hash(K key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    static int indexForNewNode(int hash, int length) {
+        return (length - 1) & hash;
+    }
+
+
+    public void put(K key, V value) {
+
+        int index = indexForNewNode(hash(key), table.length);
+
+        MyHashMap.MyNode<K, V> newNode = new MyHashMap.MyNode<>(hash(key), key, value, null);
+
+        MyHashMap.MyNode<K, V> p;
+        //if there is no node at counted index > create new node
+        if ((p = table[index]) == null) {
+            table[index] = newNode;
+            size++;
+        }
+        //check if key is unique
+        else {
+            K k;
+            if (p.hash == hash(key) && ((k = p.key) == key || (key != null && key.equals(k)))) {
+                p.setValue(newNode.value);
+            } else {
+                while (p.next != null) {
+                    p = p.next;
+                }
+                p.next = newNode;
+                size++;
+
+            }
+        }
+    }
+
+
+    public void clear() {
+        for (int i = 0; i < table.length; i++) {
+            table[i] = null;
+            size = 0;
+        }
+    }
+
+
+    public void remove(K key) {
+        int index = indexForNewNode(hash(key), table.length);
+        MyHashMap.MyNode<K, V> nodeToRemove;
+
+        if ((nodeToRemove = table[index]) != null) {
+            if (nodeToRemove.next == null) {
+                table[index] = null;
+
+            } else {
+                while (nodeToRemove.next != null) {
+                    if (hash(nodeToRemove.getKey()) == hash(key)) {
+                        continue;
+                    }
+                    table[index] = nodeToRemove.next;
+                }
+            }
+            size--;
+        }
+    }
+
+
+    public int size() {
+        return size;
+    }
+
+
+    public V get(K key) {
+        int index = indexForNewNode(hash(key), table.length);
+        MyHashMap.MyNode<K, V> nodeToGet;
+        V result = null;
+        if ((nodeToGet = table[index]) != null) {
+            if (nodeToGet.next == null) {
+                result = nodeToGet.value;
+            } else {
+                while (nodeToGet.next != null) {
+                    if (hash(nodeToGet.key) == hash(key)) {
+                        result = nodeToGet.getValue();
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
     private static class MyNode<K, V> {
-        int hash;
+        private final int hash;
         private final K key;
-        private final V value;
+        private V value;
         MyHashMap.MyNode<K, V> next;
 
-        MyNode(K key, V value, MyHashMap.MyNode<K, V> next, int hash) {
+        public MyNode(int hash, K key, V value, MyHashMap.MyNode<K, V> next) {
+            this.hash = hash;
             this.key = key;
             this.value = value;
             this.next = next;
-            this.hash = hash;
         }
 
         public K getKey() {
@@ -29,162 +122,55 @@ public class MyHashMap <K,V> {
             return value;
         }
 
-        @Override
-        public String toString() {
+        public void setValue(V newValue) {
+            V oldValue = value;
+            value = newValue;
+        }
+
+        public final String toString() {
             return key + "=" + value;
         }
 
         @Override
-        public final boolean equals(Object o) {
-            if (o == null) {
-                return false;
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
             }
-
-            if (!(o instanceof MyNode)) {
-                return false;
-            }
-            MyNode<K, V> another = (MyNode<K, V>) o;
-            int hashOfO = o.hashCode();
-            int hashAnother = another.hashCode();
-            return hashOfO == hashAnother;
-        }
-    }
-
-    @Override
-    public String toString() {
-        String s = "";
-        for (MyHashMap.MyNode<K, V> x = first; x != null; x = x.next) {
-            s += x + " ";
-        }
-        return "MyHashMap {" + s + "}";
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public void put(K key, V value) {
-         if (!isKeyInHashMap(key)) {
-            MyHashMap.MyNode<K, V> l = last;
-            MyHashMap.MyNode<K, V> f = first;
-            final MyHashMap.MyNode<K, V> newNode = new MyHashMap.MyNode<K, V>(key, value, null, hashCode());
-            if (l == null)
-                first = newNode;
-            else
-                l.next = newNode;
-            last = newNode;
-            size++;
-            System.out.println("Key - "+ key + " and value - " + value + " are added");
-
-        } else {
-
-             System.out.println("Key - " + key + " is alredy exsist.");
-         }
-    }
-    public boolean isKeyInHashMap(K key){
-        int count = 0;
-        for (MyNode<K, V> y = first; y != null; y = y.next){
-            if (key.equals(y.key)){
-                count++;
-            }
-
-        }
-        return count==1;
-    }
-
-
-    public void remove(K key) {
-        size--;
-        MyNode<K, V> nodeToRemove;
-        int index = -1;
-        for (MyNode<K, V> y = first; y != null; y = y.next) {
-            index++;
-
-            if (key.equals(y.key)) {
-                nodeToRemove = y;
-                MyNode<K, V> pointerForNextNode;
-                pointerForNextNode = nodeToRemove.next;
-
-                if (index >= 0 && index < size) {
-                    MyHashMap.MyNode<K, V> z = first;
-
-                    if (index == 0){
-                        first = z.next;
-                    } else {
-                        for (int i = 0; i < index - 1; i++) {
-                            z = z.next;
-                        }
-                        z.next = pointerForNextNode;
-                    }
+            if (o instanceof MyHashMap.MyNode) {
+                MyHashMap.MyNode<K, V> objectNode = (MyHashMap.MyNode) o;
+                if (Objects.equals(key, objectNode.getKey()) &&
+                        Objects.equals(value, objectNode.getValue())) {
+                    return true;
                 }
             }
+            return false;
         }
-    }
 
-    public void clear(){
-       first = null;
-        setSize(0);
-    }
-
-    public int size(){
-        return getSize();
-    }
-
-    public V get(K key) {
-        int hashOfGivenKey = key.hashCode();
-
-        MyNode<K,V> x;
-            for ( x = first; x != null; x = x.next ) {
-                if (key.equals(x.key)) {
-                   return x.value;
-                }
-            }
-        return null;
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(key) ^ Objects.hashCode(value);
+        }
     }
 }
 
-
-class MyHashMapTest{
+class MyHashMapTest {
     public static void main(String[] args) {
-        MyHashMap <String,String>  testedHashMap = new MyHashMap<String,String>();
+        MyHashMap<String, String> testedHashMap = new MyHashMap<String, String>();
         testedHashMap.put("Key1", "value1");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
         testedHashMap.put("Key2", "value2");
-        System.out.println(testedHashMap);
         testedHashMap.put("Key2", "value2");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
         testedHashMap.put("Key3", "value3");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
         testedHashMap.put("Key4", "value4");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
         testedHashMap.put("Key5", "value5");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
+        System.out.println("Size of testedHashMap - " + testedHashMap.size());
         testedHashMap.put("Key6", "value6");
-        System.out.println(testedHashMap);
-        System.out.println("Size of testedHashMap - " + testedHashMap.getSize());
-
+        System.out.println("Size of testedHashMap - " + testedHashMap.size());
         System.out.println("For Key1 value is -  " + testedHashMap.get("Key1"));
         System.out.println("For Key5 value is -  " + testedHashMap.get("Key5"));
-
         testedHashMap.remove("Key3");
-        System.out.println("TestedHashMap after removing Key3 - " + testedHashMap);
-
         testedHashMap.remove("Key1");
-        System.out.println("TestedHashMap after removing Key1 - " + testedHashMap);
-
-        System.out.println("TestedHashMap size is - " + testedHashMap.size());
-
+        System.out.println("TestedHashMap size after removing 2 elements- " + testedHashMap.size());
         testedHashMap.clear();
-        System.out.println("TestedHashMap after clearing - " + testedHashMap);
         System.out.println("TestedHashMap size is - " + testedHashMap.size());
 
     }
