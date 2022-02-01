@@ -1,21 +1,33 @@
 package MyCollections.MyLinkedList;
 
-import MyCollections.MyHashMap.MyHashMap;
-
 public class MyLinkedList<E> {
     private int size = 0;
-    MyNode<E> first;
-    MyNode<E> last;
+    private MyNode<E> first;
+    private MyNode<E> last;
 
     private static class MyNode<E> {
-        E element;
-        MyNode<E> next;
-        MyNode<E> prev;
+        private E element;
+        private MyNode<E> next;
+        private MyNode<E> prev;
 
         MyNode(MyNode<E> prev, E element, MyNode<E> next) {
             this.element = element;
         }
 
+        public E getElement() {
+            return element;
+        }
+
+        public void setElement(E element) {
+            this.element = element;
+        }
+        public MyNode<E> getNext() {
+            return next;
+        }
+
+        public void setNext(MyNode<E> next) {
+            this.next = next;
+        }
         @Override
         public String toString() {
             return String.valueOf(element);
@@ -53,30 +65,38 @@ public class MyLinkedList<E> {
     }
 
 
-    public E remove(int index) {
-        if (index >= 0 && index < size) {
-            MyLinkedList.MyNode<E> nodeToRemove = (MyNode<E>) get(index);
-            System.out.println("node to remove" + nodeToRemove);
-            MyLinkedList.MyNode<E> nodeBefore = nodeToRemove.prev;
-            MyLinkedList.MyNode<E> nodeNext = nodeToRemove.next;
-
-            MyLinkedList.MyNode<E> z = first;
-
-            if (index == 0) {
-                first = z.next;
-            } else {
-                for (int i = 0; i < index - 1; i++) {
-                    z = z.next;
+    public void remove(int index) {
+            try {
+                MyNode<E> x = first;
+                for (int i = 0; i < index; i++) {
+                    x = x.next;
                 }
-                z.next = nodeNext;
-                z.prev = nodeBefore;
+                removeNode(x);
+            } catch (NullPointerException e) {
+                System.out.println("Index out of bound");
             }
+    }
 
-            return nodeToRemove.element;
+    void removeNode (MyNode<E> x) {
+        final MyNode<E> next = x.next;
+        final MyNode<E> prev = x.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
         }
 
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
 
-        return null;
+        x.element = null;
+        size--;
     }
 
     public void clear() {
@@ -95,15 +115,19 @@ public class MyLinkedList<E> {
     }
 
     public E get(int index) {
-        if (index >= 0 && index < size) {
-            MyLinkedList.MyNode<E> x = first;
+        try {
+            MyNode<E> node = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                node = checkNextElement(node);
             }
-            return (E) x;
+            return node.getElement();
+        } catch (NullPointerException e) {
+            return (E) "Out of list";
         }
+    }
 
-        return null;
+    private MyNode<E> checkNextElement(MyNode<E> current) {
+        return current.getNext();
     }
 }
 
@@ -124,13 +148,28 @@ class MyLinkedListTest {
 
         System.out.println("Element from specific index 1 - " + testedList.get(1));
 
-        System.out.println("Removed element from 2 index - " + testedList.remove(2));
+        testedList.remove(2);
 
         System.out.println("TestedList after removed element - " + testedList);
 
         testedList.clear();
         System.out.println("TestedList after cleaning - " + testedList);
         System.out.println("Size of testedList - " + testedList.size());
+
+        MyLinkedList<String> list2 = new MyLinkedList<>();
+
+        list2.add("1");
+        list2.add("2");
+        list2.add("3");
+        list2.add("4");
+        list2.add("5");
+
+        list2.remove(-3);
+        list2.remove(2);
+        System.out.println(list2);
+        System.out.println(list2.get(2));
+        list2.size();
+        list2.clear();
 
     }
 }
