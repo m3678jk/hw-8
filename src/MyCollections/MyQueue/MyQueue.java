@@ -68,30 +68,29 @@ public void remove(int index) {
     }
 
     public E peek(){
-        if (size()==0){
-            System.out.println("Size = "+  size() +", Queue is empty");
+        try {
+            return getQueue()[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Size = " + size() + ", Queue is empty");
             return null;
         }
-
-        return getQueue()[0];
     }
 
     public E poll(){
-        if (size()==0){
-            System.out.println("Size = "+  size() +", Queue is empty");
+        try {
+                E element = getQueue()[0];
+                Object[] arrayToChange = Arrays.copyOf(getQueue(), getQueue().length);
+
+                // reduce length of new Array
+                changedQueue = new Object[arrayToChange.length - 1];
+
+                // Copy objects from base array to new one
+                System.arraycopy(arrayToChange, 1, changedQueue, 0, arrayToChange.length - 1);
+                setQueue((E[]) changedQueue);
+                return element;
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("Size = " + size() + ", Queue is empty");
             return null;
-        } else {
-
-            E element = getQueue()[0];
-            Object[] arrayToChange = Arrays.copyOf(getQueue(), getQueue().length);
-
-            // reduce length of new Array
-            changedQueue = new Object[arrayToChange.length - 1];
-
-            // Copy objects from base array to new one
-            System.arraycopy(arrayToChange, 1, changedQueue, 0, arrayToChange.length - 1);
-            setQueue((E[]) changedQueue);
-            return element;
         }
     }
 }
