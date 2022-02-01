@@ -63,19 +63,18 @@ public class MyStack<E> {
     }
 
     public E peek() {
-        if (size()==0){
-            System.out.println("Size = "+  size() +", Stack is empty");
-            return null;
+        try {
+            return getStack()[getStack().length - 1];
+        }catch (ArrayIndexOutOfBoundsException e){
+              System.out.println("Size = "+  size() +", Stack is empty");
+                return null;
+
         }
-        return getStack()[getStack().length - 1];
     }
 
     public E pop() {
-        if (size()==0){
-            System.out.println("Size = "+  size() +", Stack is empty");
-            return null;
-        } else {
-            E element = getStack()[getStack().length - 1];
+        try {
+                       E element = getStack()[getStack().length - 1];
             Object[] arrayToChange = Arrays.copyOf(getStack(), getStack().length);
 
             // reduce length of new Array
@@ -85,6 +84,9 @@ public class MyStack<E> {
             System.arraycopy(arrayToChange, 0, changedStack, 0, arrayToChange.length - 1);
             setStack((E[]) changedStack);
             return element;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Size = "+  size() +", Stack is empty");
+            return null;
         }
     }
 }
@@ -119,7 +121,7 @@ class MyStackTest {
         System.out.println("Stack after popping an element - " + Arrays.toString(testedStack.getStack()));
 
         testedStack.clear();
-        System.out.println("Stack after popping an element - " + Arrays.toString(testedStack.getStack()));
+        System.out.println("Stack after clearing - " + Arrays.toString(testedStack.getStack()));
 
         testedStack.pop();
 
