@@ -12,6 +12,8 @@ public class MyLinkedList<E> {
 
         MyNode(MyNode<E> prev, E element, MyNode<E> next) {
             this.element = element;
+            this.next = next;
+            this.prev = prev;
         }
 
         public E getElement() {
@@ -65,16 +67,17 @@ public class MyLinkedList<E> {
     }
 
 
-    public void remove(int index) {
-            try {
-                MyNode<E> x = first;
-                for (int i = 0; i < index; i++) {
-                    x = x.next;
-                }
-                removeNode(x);
-            } catch (NullPointerException e) {
-                System.out.println("Index out of bound");
+    public void remove(int index) throws NullPointerException{
+        if (index >=0 ) {
+            MyNode<E> x = first;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
             }
+            removeNode(x);
+
+        } else {
+            System.out.println("Index cannot be less than 0");
+        }
     }
 
     void removeNode (MyNode<E> x) {
@@ -114,16 +117,16 @@ public class MyLinkedList<E> {
         return getSize();
     }
 
-    public E get(int index) {
-        try {
+    public E get(int index) throws NullPointerException {
+        if (index >=0) {
             MyNode<E> node = first;
             for (int i = 0; i < index; i++) {
                 node = checkNextElement(node);
             }
             return node.getElement();
-        } catch (NullPointerException e) {
-            return (E) "Out of list";
-        }
+        } else {
+            System.out.println("Index cannot be less than 0");
+        } return null;
     }
 
     private MyNode<E> checkNextElement(MyNode<E> current) {
@@ -164,11 +167,13 @@ class MyLinkedListTest {
         list2.add("4");
         list2.add("5");
 
-        list2.remove(-3);
+        list2.remove(3);
         list2.remove(2);
         System.out.println(list2);
-        System.out.println(list2.get(2));
-        list2.size();
+        System.out.println(list2.size());
+
+       // list2.remove(10);
+        System.out.println(list2.get(6));
         list2.clear();
 
     }
